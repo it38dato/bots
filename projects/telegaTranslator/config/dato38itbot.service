@@ -1,0 +1,13 @@
+[Unit]
+Description=YourProject
+After=network.target
+[Service]
+User=YourUser
+Group=YourGroup
+WorkingDirectory=/home/YourUser/YourProject/
+VIRTUAL_ENV=/home/YourUser/YourEnv
+Environment=PATH=$VIRTUAL_ENV/bin:$PATH
+ExecStart=/home/YourUser/YourEnv/bin/python /home/YourUser/YourProject/main.py
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
