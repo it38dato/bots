@@ -39,11 +39,13 @@ def insert_giude(ru, ge, tge, en, ten, content):
     cursor.close()
     conn.close()
 def select_guide(ru, message):
-    if message.txt == ru:
+    if message.text == ru:
         with closing(connect_to_db()) as conn:
             with conn.cursor() as cursor:
+                #cursor.execute(f"select * from guide where ru='{ru}';")
                 cursor.execute(f"select * from guide where ru like '%{ru}%';")
                 for row in cursor:
+                    #print(row[1])
                     bot.send_message(message.chat.id, " | "+str(row[0])+" | "+row[1]+" | "+row[2]+" | "+row[3]+" | "+row[4]+" | "+row[5]+" | "+row[6]+" | ")
     else:
         bot.send_message(message.chat.id, 'Я тебя не понимаю')
@@ -69,7 +71,7 @@ def funcs_bot(message):
                         "5. Дополнить описание\n" \
                         "6. Справочник\n" \
                         "7. Дополнить справочник\n" \
-                        "8. Вывести значение из справочника "
+                        "8. Вывести значение из справочника"
         key = types.ReplyKeyboardMarkup(resize_keyboard=True)
         #button = types.InlineKeyboardButton(text='Мое портфолио', url="http://dato138it.ru")
         but1 = types.KeyboardButton("Переводчик")
