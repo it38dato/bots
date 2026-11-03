@@ -1,6 +1,9 @@
 #!/bin/bash
 
-git status
+cd ..
+ls
+pwd
 
+git status
 git fetch origin
 git diff main origin/main

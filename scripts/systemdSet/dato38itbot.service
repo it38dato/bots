@@ -1,0 +1,15 @@
+[Unit]
+Description=Telegram dato38it-bot
+After=network.target
+
+[Service]
+User=ВАШЕ ИМЯ
+Group=ВАША ГРУППА
+WorkingDirectory=/home/ВАШЕ ИМЯ/dato38itbot/
+VIRTUAL_ENV=/home/ВАШЕ ИМЯ/dato38itbot/telegaenv
+Environment=PATH=$VIRTUAL_ENV/bin:$PATH
+ExecStart=/home/ВАШЕ ИМЯ/dato38itbot/telegaenv/bin/python /home/ВАШЕ ИМЯ/dato38itbot/main.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
