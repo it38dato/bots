@@ -1,0 +1,66 @@
+В файлах начинающихся с test*.py проекты, которые выполнялись пошагово для создания программы:
+1. написать консольное меню, которое будет предлагать какие действия нужно выполнить. Для запуска проекта использую скрипт в терминале "testMenu.py"
+2. написать скрипт, в котором бот будет переводить слова - с английского на русский и с русского на английский. Для запуска проекта использую скрипт в терминале "testTranslator.py"
+3. написать консольное меню, в котором бот будет переводить слова с русского на английский. Для запуска проекта использую скрипт в терминале "testMenuTranslator.py". Добавил возможность в функцию меню, переводить с русского на английский язык. в момент запуска в меню нужно выбрать translator - translate и написать текст на русском, который нужно перевести.
+4. Написать телеграм бот с меню кнопками
+В файле testTranslatorMenuTelebot.py необоходимо заменить TOKEN. 
+В телеграмме уже будет активна кнопка переводчик. тот же функционал выполняет, что и скрипт "testMenuTranslator.py" - Уже будет переводить слова и предложения.
+5. Необходимо настроить БД PostgreSql и сделать таким образом, чтобы бот отображал информацию из БД. провести миграцию БД с локального тестового сервера в облачный вируальный сервер.
+Все процедуры с БД выполняются в терминале.
+Таблицы БД будут такими:
+Разработать 
+Словарь
+id | words | translate
+1 | Текст1 | Text1
+2 | Текст2 | Text2
+3 | Текст3 | Text3
+Термины
+id | words_id | description | translate
+1 | 1 | Текст4 | Text4
+2 | 3 | Текст5 | Text5
+- Настроить БД можно следующим командами:
+createdb YourNameDB
+psql -U YourUser -d YourNameDB -h YourIP
+GRANT ALL PRIVILEGES ON DATABASE YourNameDB to YourUser;
+ALTER DATABASE YourNameDB OWNER TO YourUser;
+\l+
+cat /etc/postgresql/14/main/pg_hba.conf
+...
+host YourNameDB YourUser YourIP/24 md5
+systemctl restart postgresql
+- Создать таблицы в БД:
+psql -U YourUser -d YourNameDB -h YourIP
+CREATE TABLE dictionary (
+id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+words VARCHAR(1000),
+translate VARCHAR(1000)
+);
+CREATE TABLE Terms (
+id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+words_id INT,
+description VARCHAR(1000),
+translate VARCHAR(1000),
+CONSTRAINT fk_YourNameDB
+FOREIGN KEY(words_id)
+REFERENCES dictionary(id)
+);
+INSERT INTO dictionary (words, translate)
+VALUES ('Текст1', 'Text1'), ('Текст2', 'Text2'), ('Текст3', 'Text3');
+INSERT INTO Terms (words_id, description, translate)
+VALUES (1, 'Текст4', 'Text4'), (3, 'Текст5','Text5');
+- выполнить запрос:
+select words, dictionary.translate, description, Terms.translate
+from dictionary
+inner join Terms
+on dictionary.id = Terms.words_id;
+- Миграция базы с одного сервера на другой:
+pg_dump -Fc -v --username=YourUser --dbname=YourNameDB -f datapsql2.dump
+scp datapsql2.dump YourUser@YourIP:/home/YourUser/
+pg_restore -v --no-owner --port=5432 --username=YourUser --dbname=YourNameDB datapsql2.dump
+- в командной строке выполнить запрос через python "testSelectPsql.py":
+source envTelegaTranslator/bin/activate
+python3 testSelectPsql.py
+6. написать функцию в боте, что пользователь мог добавлять информацию в БД через телеграм.
+в командной строке выполнить запрос через python "testPsqlTelebot.py".
+проверить что добавилиьс можно в телеграме, а можно и в БД выполни в запрос: select * from Dictionary;
+в Файле нужно заменить параметры БД и ключи токена.

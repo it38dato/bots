@@ -1,3 +1,0 @@
-VENV_NAME="envTelegaTranslator"
-REQUIREMENTS_FILE="requirements.txt"
-START_PROJECT="testMenuTranslator.py"
